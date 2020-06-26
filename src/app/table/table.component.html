@@ -1,0 +1,92 @@
+<div class="container">
+  <br />
+  <h3>
+    Time Table Generator
+    <small class="text-muted">Automation</small>
+  </h3>
+  <br />
+
+  <div *ngIf="college!=null">
+  <p class="text-success">Time Table is succesfully Generated</p>
+  <p class="text-warning">
+    <strong>In Database we have : {{college.streams.length}} Streams, {{streamStandards.length}} classes, {{subjects.length}} subjects, {{practicals.length}} practicals,
+  {{college.faculties.length}} Faculties
+</strong></p>
+
+  </div>
+  
+    <fieldset class="mb-3">
+      <div class="form-group">
+      <select class="custom-select" #queryStream (change)="onChangeStream($event)">
+        <option selected="">Select Stream</option>
+         <option *ngFor="let stream of streams let i = index" [value]="i" >
+           {{ stream.name }}
+          </option>
+      </select>
+    </div>
+      <div class="form-group">
+      <select class="custom-select" #queryStreamStandard (change)="onChangeSTreamStandard($event)">
+        <option selected="">Select Stream Standard</option>
+         <option *ngFor="let standard of selectStandardList let i = index" [value]="i" >
+           {{ standard.name }}
+          </option>
+      </select>
+    </div>
+   
+  </fieldset>
+    <button (click)="showTable()" class="btn btn-success">Search Table</button>
+  <br>
+  <hr>
+</div>
+  <table class="table table-hover" *ngIf="show">
+    <thead>
+      <tr class="table-primary">
+        <th scope="col">Days/ Lec No.</th>
+        <th scope="col" style="text-align: center">1</th>
+        <th scope="col" style="text-align: center">2</th>
+        <th scope="col" style="text-align: center">3</th>
+        <th scope="col" style="text-align: center">4</th>
+        <th scope="col" style="text-align: center">5</th>
+        <th scope="col" style="text-align: center">6</th>
+        <th scope="col" style="text-align: center">7</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let day of days; let j= index">
+        <td>{{ nameOfDays[j] }}</td>
+
+        <ng-container *ngFor="let lec of day.lectures">
+
+          <ng-container *ngIf="lec.isSubject == true; then subject">
+          </ng-container>
+
+          <ng-container
+            *ngIf="lec.isBatchPractical == true; then batchPractical"
+          >
+          </ng-container>
+
+          <ng-container *ngIf="lec.practical; then practical"> </ng-container>
+
+          <ng-template #subject>
+            <td style="text-align: center">{{ lec.subject.name }}</td>
+          </ng-template>
+
+          <ng-template #practical>
+            <td style="text-align: center">{{ lec.practical.name }}</td>
+          </ng-template>
+
+          <ng-template #batchPractical>
+            <td style="text-align: center">
+
+              <ng-container *ngFor="let pract of lec.practicals">
+                
+                {{pract.name}}
+                
+              </ng-container>
+            </td>
+          </ng-template>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+
